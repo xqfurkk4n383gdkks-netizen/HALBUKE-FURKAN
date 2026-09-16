@@ -22,7 +22,7 @@
             overflow: hidden;
         }
 
-        /* Arka Plan Efektleri */
+        /* Arka Plan */
         .bg-glow {
             position: absolute;
             width: 600px;
@@ -34,7 +34,7 @@
             z-index: 0;
         }
 
-        /* Giriş (Key) Ekranı */
+        /* Giriş Ekranı */
         #auth-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -98,7 +98,14 @@
             box-shadow: 0 0 25px rgba(255, 20, 147, 0.8);
         }
 
-        /* Ana İçerik Alanı */
+        #error-msg {
+            color: #ff4d4d;
+            margin-top: 15px;
+            display: none;
+            font-size: 14px;
+        }
+
+        /* Ana İçerik */
         #main-content {
             display: none;
             position: absolute;
@@ -112,7 +119,6 @@
             z-index: 1;
         }
 
-        /* Arayüz / Yazılar */
         .ui-layer {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -159,26 +165,16 @@
             border: 1px solid rgba(255, 20, 147, 0.3);
             backdrop-filter: blur(5px);
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            text-align: center;
         }
 
-        /* Özel Spotify Oynatıcı Alanı */
-        .spotify-container {
+        /* YouTube Videosunu Tamamen Gizleyen Alan */
+        #youtube-player-container {
             position: absolute;
-            bottom: 40px;
-            width: 350px;
-            pointer-events: auto; /* Tıklanabilir olması için */
-            background: rgba(0, 0, 0, 0.4);
-            padding: 10px;
-            border-radius: 15px;
-            border: 1px solid rgba(255, 20, 147, 0.3);
-            box-shadow: 0 0 20px rgba(255, 20, 147, 0.2);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease;
-        }
-
-        .spotify-container:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(255, 20, 147, 0.4);
+            top: -9999px;
+            left: -9999px;
+            visibility: hidden;
+            opacity: 0;
         }
 
         /* Animasyonlar */
@@ -194,13 +190,6 @@
         @keyframes pulseTitle {
             from { text-shadow: 0 0 10px rgba(255, 20, 147, 0.5); }
             to { text-shadow: 0 0 30px rgba(255, 20, 147, 1), 0 0 40px rgba(138, 43, 226, 0.8); }
-        }
-
-        #error-msg {
-            color: #ff4d4d;
-            margin-top: 15px;
-            display: none;
-            font-size: 14px;
         }
     </style>
 </head>
@@ -227,20 +216,55 @@
             <h1 class="title">HALBUKE & FURKAN</h1>
             <h2 class="center-name">HALBUKE</h2>
             <p class="quote">"Sen benim gökyüzüne gönderdiğim duamın yeryüzündeki en güzel cevabısın..."</p>
-            
-            <!-- Şık Spotify Oynatıcı -->
-            <div class="spotify-container">
-                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/7uv632EkfwYhXoqf8rhYrg?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
         </div>
     </div>
 
+    <!-- GİZLİ YOUTUBE OYNATICI -->
+    <div id="youtube-player-container">
+        <div id="ytplayer"></div>
+    </div>
+
+    <!-- YouTube API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
+        // ==========================================
+        // BURAYI KENDİ ŞARKINA GÖRE DEĞİŞTİREBİLİRSİN
+        // ==========================================
+        const youtubeVideoID = "vY2eM5Yt_l8"; // Şarkının YouTube linkindeki "v=" sonrasındaki kod
+        const saniyedenBasla = 45; // Şarkının kaçıncı saniyeden başlamasını istiyorsan buraya yaz
+        // ==========================================
+
+        let player;
+        let isPlayerReady = false;
+
+        // YouTube API yüklendiğinde otomatik çalışan fonksiyon
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('ytplayer', {
+                height: '10',
+                width: '10',
+                videoId: youtubeVideoID,
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'start': saniyedenBasla, // Müzik buradan başlayacak
+                    'playsinline': 1
+                },
+                events: {
+                    'onReady': function() { isPlayerReady = true; }
+                }
+            });
+        }
+
         const correctKey = "heraXfurkan";
 
         function checkKey() {
             const input = document.getElementById("key-input").value;
             if(input === correctKey) {
+                // Şifre doğruysa müziği başlat
+                if(isPlayerReady) {
+                    player.playVideo();
+                }
+
                 document.getElementById("auth-screen").style.opacity = "0";
                 setTimeout(() => {
                     document.getElementById("auth-screen").style.display = "none";
@@ -254,6 +278,7 @@
             }
         }
 
+        // Canvas (Dönen Kalp) Animasyonu
         function initCanvas() {
             const canvas = document.getElementById('heartCanvas');
             const ctx = canvas.getContext('2d');
