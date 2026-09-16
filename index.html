@@ -22,7 +22,7 @@
             overflow: hidden;
         }
 
-        /* Arka Plan */
+        /* Arka Plan Efektleri */
         .bg-glow {
             position: absolute;
             width: 600px;
@@ -34,7 +34,7 @@
             z-index: 0;
         }
 
-        /* Giriş Ekranı */
+        /* Giriş (Key) Ekranı */
         #auth-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -98,14 +98,7 @@
             box-shadow: 0 0 25px rgba(255, 20, 147, 0.8);
         }
 
-        #error-msg {
-            color: #ff4d4d;
-            margin-top: 15px;
-            display: none;
-            font-size: 14px;
-        }
-
-        /* Ana İçerik */
+        /* Ana İçerik Alanı */
         #main-content {
             display: none;
             position: absolute;
@@ -119,6 +112,7 @@
             z-index: 1;
         }
 
+        /* Arayüz / Yazılar */
         .ui-layer {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -165,16 +159,16 @@
             border: 1px solid rgba(255, 20, 147, 0.3);
             backdrop-filter: blur(5px);
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            text-align: center;
         }
 
-        /* YouTube Videosunu Tamamen Gizleyen Alan */
+        /* YouTube Oynatıcıyı Tamamen Gizleyen Alan */
         #youtube-player-container {
             position: absolute;
             top: -9999px;
             left: -9999px;
             visibility: hidden;
             opacity: 0;
+            pointer-events: none;
         }
 
         /* Animasyonlar */
@@ -190,6 +184,13 @@
         @keyframes pulseTitle {
             from { text-shadow: 0 0 10px rgba(255, 20, 147, 0.5); }
             to { text-shadow: 0 0 30px rgba(255, 20, 147, 1), 0 0 40px rgba(138, 43, 226, 0.8); }
+        }
+
+        #error-msg {
+            color: #ff4d4d;
+            margin-top: 15px;
+            display: none;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -227,17 +228,10 @@
     <!-- YouTube API -->
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // ==========================================
-        // BURAYI KENDİ ŞARKINA GÖRE DEĞİŞTİREBİLİRSİN
-        // ==========================================
-        const youtubeVideoID = "vY2eM5Yt_l8"; // Şarkının YouTube linkindeki "v=" sonrasındaki kod
-        const saniyedenBasla = 45; // Şarkının kaçıncı saniyeden başlamasını istiyorsan buraya yaz
-        // ==========================================
-
+        const youtubeVideoID = "abps1Fk5-gc"; // Eklediğin Shorts videosunun ID'si
         let player;
         let isPlayerReady = false;
 
-        // YouTube API yüklendiğinde otomatik çalışan fonksiyon
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('ytplayer', {
                 height: '10',
@@ -246,7 +240,8 @@
                 playerVars: {
                     'autoplay': 0,
                     'controls': 0,
-                    'start': saniyedenBasla, // Müzik buradan başlayacak
+                    'loop': 1,
+                    'playlist': youtubeVideoID, // Şarkı bitince tekrar başa sarsın diye
                     'playsinline': 1
                 },
                 events: {
@@ -260,7 +255,6 @@
         function checkKey() {
             const input = document.getElementById("key-input").value;
             if(input === correctKey) {
-                // Şifre doğruysa müziği başlat
                 if(isPlayerReady) {
                     player.playVideo();
                 }
@@ -278,7 +272,6 @@
             }
         }
 
-        // Canvas (Dönen Kalp) Animasyonu
         function initCanvas() {
             const canvas = document.getElementById('heartCanvas');
             const ctx = canvas.getContext('2d');
