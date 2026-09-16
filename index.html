@@ -1,214 +1,173 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HALBUKE & FURKAN</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halbuke & Furkan</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #0a0a0a;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+  }
 
-        body {
-            background-color: #0d0f18;
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-        }
+  /* Ortadaki Atan Kalp */
+  .main-heart {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    background: #ff2a2a;
+    transform: rotate(-45deg);
+    animation: heartbeat 1.2s infinite;
+    box-shadow: 0 0 50px #ff2a2a;
+    z-index: 10;
+  }
 
-        /* Arka Plan Parçacık Canvası */
-        #bgCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
+  .main-heart::before, .main-heart::after {
+    content: "";
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: #ff2a2a;
+    border-radius: 50%;
+  }
 
-        /* Ana Kart (Glassmorphism) */
-        .container {
-            position: relative;
-            z-index: 2;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px 30px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5),
-                        0 0 30px rgba(236, 72, 153, 0.1);
-            text-align: center;
-            max-width: 420px;
-            width: 90%;
-            animation: fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
+  .main-heart::before {
+    top: -100px;
+    left: 0;
+  }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
+  .main-heart::after {
+    top: 0;
+    left: 100px;
+  }
 
-        /* Profil / Kalp Alanı */
-        .icon-box {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #ec4899, #8b5cf6);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 20px auto;
-            box-shadow: 0 0 25px rgba(236, 72, 153, 0.5);
-            animation: pulse 2s infinite;
-        }
+  /* Kalbin İçindeki Yazı */
+  .heart-text {
+    position: absolute;
+    transform: rotate(45deg);
+    top: 40px;
+    left: -20px;
+    width: 240px;
+    text-align: center;
+    z-index: 20;
+    font-size: 26px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    line-height: 1.5;
+  }
 
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 20px rgba(236, 72, 153, 0.4); }
-            50% { transform: scale(1.06); box-shadow: 0 0 35px rgba(236, 72, 153, 0.7); }
-            100% { transform: scale(1); box-shadow: 0 0 20px rgba(236, 72, 153, 0.4); }
-        }
+  /* Kalp Atış Animasyonu */
+  @keyframes heartbeat {
+    0% { transform: scale(1) rotate(-45deg); }
+    20% { transform: scale(1.15) rotate(-45deg); }
+    40% { transform: scale(1) rotate(-45deg); }
+    60% { transform: scale(1.15) rotate(-45deg); }
+    80% { transform: scale(1) rotate(-45deg); }
+    100% { transform: scale(1) rotate(-45deg); }
+  }
 
-        .icon-box svg {
-            width: 40px;
-            height: 40px;
-            fill: #fff;
-        }
+  /* Arka Planda Uçuşan Halbuke Yazıları */
+  .floating-text {
+    position: absolute;
+    color: #ff4d4d;
+    font-weight: bold;
+    animation: floatUp linear infinite;
+    opacity: 0;
+    z-index: 1;
+    text-shadow: 0 0 10px #ff0000;
+  }
 
-        /* İsimler Başlığı */
-        h1 {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            background: linear-gradient(to right, #ff758c, #ff7eb3, #b224ef);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 12px;
-            text-shadow: 0 2px 10px rgba(255, 117, 140, 0.2);
-        }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+    20% { opacity: 0.8; }
+    80% { opacity: 0.8; }
+    100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+  }
 
-        /* Açıklama Yazısı */
-        p {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
+  /* Müzik Butonu */
+  #music-btn {
+    position: absolute;
+    bottom: 30px;
+    padding: 12px 25px;
+    background: transparent;
+    color: #ff2a2a;
+    border: 2px solid #ff2a2a;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 100;
+    transition: 0.3s;
+  }
 
-        /* Buton Tasarımı */
-        .btn {
-            display: inline-block;
-            padding: 12px 28px;
-            background: linear-gradient(135deg, #ff758c, #b224ef);
-            color: #fff;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(178, 36, 239, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 117, 140, 0.6);
-        }
-
-        .btn:active {
-            transform: translateY(1px);
-        }
-    </style>
+  #music-btn:hover {
+    background: #ff2a2a;
+    color: white;
+    box-shadow: 0 0 15px #ff2a2a;
+  }
+</style>
 </head>
 <body>
 
-    <!-- Arka Plan Dinamik Parçacık Animasyonu -->
-    <canvas id="bgCanvas"></canvas>
+<button id="music-btn">🎵 Müziği Başlat</button>
 
-    <div class="container">
-        <div class="icon-box">
-            <!-- Kalp İkonu -->
-            <svg viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
-        </div>
-        <h1>HALBUKE & FURKAN</h1>
-        <p>Özel olarak hazırlandı. Bu şık arayüzü dilediğin gibi özelleştirebilir, metinleri değiştirebilir veya fotoğraflar ekleyebilirsin.</p>
-        <button class="btn" onclick="alert('Halbuke & Furkan ✨')">Dokun</button>
-    </div>
+<audio id="bg-music" loop>
+  <source src="angel_i_love_you.mp3" type="audio/mpeg">
+</audio>
 
-    <script>
-        // Arka Plan Parçacık Efekti
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
+<div class="main-heart">
+  <div class="heart-text">HALBUKE<br>&<br>FURKAN</div>
+</div>
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+<script>
+  // Arka planda uçuşan "HALBUKE ♥" yazılarını oluşturan sistem
+  function createFloatingText() {
+    const text = document.createElement('div');
+    text.classList.add('floating-text');
+    text.innerHTML = "HALBUKE &hearts;";
+    
+    // Rastgele yatay konum
+    text.style.left = Math.random() * 100 + "vw";
+    
+    // Rastgele uçuş süresi ve boyutu
+    text.style.animationDuration = (Math.random() * 4 + 4) + "s";
+    text.style.fontSize = (Math.random() * 15 + 12) + "px";
+    
+    document.body.appendChild(text);
 
-        const particlesArray = [];
-        const numberOfParticles = 45;
+    // Ekranda kaybolduktan sonra silinmesi için
+    setTimeout(() => {
+      text.remove();
+    }, 8000);
+  }
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 1;
-                this.speedX = Math.random() * 0.6 - 0.3;
-                this.speedY = Math.random() * 0.6 - 0.3;
-                this.color = Math.random() > 0.5 ? 'rgba(236, 72, 153, 0.5)' : 'rgba(139, 92, 246, 0.5)';
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
+  // Her 400 milisaniyede bir yeni yazı oluştur
+  setInterval(createFloatingText, 400);
 
-                if (this.x > canvas.width) this.x = 0;
-                else if (this.x < 0) this.x = canvas.width;
-
-                if (this.y > canvas.height) this.y = 0;
-                else if (this.y < 0) this.y = canvas.height;
-            }
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function initParticles() {
-            for (let i = 0; i < numberOfParticles; i++) {
-                particlesArray.push(new Particle());
-            }
-        }
-        initParticles();
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-                particlesArray[i].draw();
-            }
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-    </script>
+  // Müzik kontrol sistemi
+  document.getElementById('music-btn').addEventListener('click', function() {
+    var audio = document.getElementById('bg-music');
+    if (audio.paused) {
+      audio.play();
+      this.innerText = "🎵 Müzik Çalıyor";
+      this.style.background = "#ff2a2a";
+      this.style.color = "white";
+    } else {
+      audio.pause();
+      this.innerText = "🎵 Müziği Başlat";
+      this.style.background = "transparent";
+      this.style.color = "#ff2a2a";
+    }
+  });
+</script>
 </body>
 </html>
